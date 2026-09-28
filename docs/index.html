@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Library Desk</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <main id="loginPage" class="login-page">
+        <section class="login-card">
+            <p class="eyebrow">LIBRARY DESK</p>
+            <h1>Library Management System</h1>
+            <p class="muted">Sign in to manage your library.</p>
+            <form id="loginForm">
+                <label>Username<input id="username" required placeholder="Enter username"></label>
+                <label>Password<input id="password" type="password" required placeholder="Enter password"></label>
+                <p id="loginMessage" class="error"></p>
+                <button class="button primary" type="submit">Login</button>
+                <button class="button light" type="reset">Clear / Reset</button>
+            </form>
+        </section>
+    </main>
+
+    <main id="appPage" class="app-page hidden">
+        <aside class="sidebar">
+            <div><p class="eyebrow">LIBRARY DESK</p><p class="sidebar-subtitle">Management System</p></div>
+            <nav>
+                <button data-page="dashboard">Dashboard</button>
+                <button data-page="books">Add Book</button>
+                <button data-page="members">Add Member</button>
+                <button data-page="manage">Manage Members</button>
+                <button data-page="issue">Issue Book</button>
+                <button data-page="return">Return Book</button>
+                <button data-page="history">Borrowing History</button>
+            </nav>
+            <button id="logoutButton" class="logout">Logout</button>
+        </aside>
+        <section class="content"><div id="pageContent"></div></section>
+    </main>
+    <script src="app.js"></script>
+</body>
+</html>

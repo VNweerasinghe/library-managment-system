@@ -1,6 +1,7 @@
 package com.library;
 
 import javafx.collections.FXCollections;
+import javafx.collections.transformation.FilteredList;
 import javafx.fxml.FXML;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -12,7 +13,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
-import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.geometry.Insets;
 import javafx.scene.layout.GridPane;
@@ -22,6 +22,8 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.List;
 
 public class DashboardController {
     @FXML private javafx.scene.layout.StackPane contentArea;
@@ -130,16 +132,25 @@ public class DashboardController {
     private void showMembers() {
         VBox box = page("Manage Members", "Search, edit, or delete registered members.");
         TextField search = textField("Search members by name or ID");
-        TableView<java.util.List<String>> table = new TableView<>();
+        TableView<List<String>> table = new TableView<>();
         String[] headings = {"Member ID", "Full Name", "Email", "Phone"};
         for (int i = 0; i < headings.length; i++) {
-            final int index = i; TableColumn<java.util.List<String>, String> column = new TableColumn<>(headings[i]);
-            column.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().get(index))); column.setPrefWidth(180); table.getColumns().add(column);
+            final int index = i;
+            TableColumn<List<String>, String> column = new TableColumn<>(headings[i]);
+            column.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().get(index)));
+            column.setPrefWidth(180);
+            table.getColumns().add(column);
         }
-        table.setItems(FXCollections.observableArrayList(
-                java.util.Arrays.asList("M-001", "Amal Perera", "amal@email.com", "077 123 4567"),
-                java.util.Arrays.asList("M-002", "Nimal Silva", "nimal@email.com", "071 555 2211"),
-                java.util.Arrays.asList("M-003", "Sara Fernando", "sara@email.com", "076 900 1122")));
+        javafx.collections.ObservableList<List<String>> members = FXCollections.observableArrayList(
+                Arrays.asList("M-001", "Amal Perera", "amal@email.com", "077 123 4567"),
+                Arrays.asList("M-002", "Nimal Silva", "nimal@email.com", "071 555 2211"),
+            Arrays.asList("M-003", "Sara Fernando", "sara@email.com", "076 900 1122"));
+        FilteredList<List<String>> filteredMembers = new FilteredList<>(members);
+        table.setItems(filteredMembers);
+        search.textProperty().addListener((observable, oldValue, newValue) -> {
+            String searchText = newValue.toLowerCase();
+            filteredMembers.setPredicate(member -> member.toString().toLowerCase().contains(searchText));
+        });
         VBox.setVgrow(table, Priority.ALWAYS);
         HBox buttons = new HBox(10, actionButton("Edit Member"), actionButton("Delete Member"));
         box.getChildren().addAll(search, table, buttons); setContent(box);
@@ -175,13 +186,19 @@ public class DashboardController {
     @FXML
     private void showHistory() {
         VBox box = page("Borrowing History", "Review borrowed, returned, and overdue books.");
-        TableView<java.util.List<String>> table = new TableView<>();
+        TableView<List<String>> table = new TableView<>();
         String[] headings = {"Member ID", "Book Title", "Issue Date", "Due Date", "Return Date", "Status"};
-        for (int i = 0; i < headings.length; i++) { final int index = i; TableColumn<java.util.List<String>, String> column = new TableColumn<>(headings[i]); column.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().get(index))); column.setPrefWidth(145); table.getColumns().add(column); }
+        for (int i = 0; i < headings.length; i++) {
+            final int index = i;
+            TableColumn<List<String>, String> column = new TableColumn<>(headings[i]);
+            column.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().get(index)));
+            column.setPrefWidth(145);
+            table.getColumns().add(column);
+        }
         table.setItems(FXCollections.observableArrayList(
-                java.util.Arrays.asList("M-001", "Clean Code", "2026-09-15", "2026-09-29", "-", "Borrowed"),
-                java.util.Arrays.asList("M-002", "Java Basics", "2026-09-01", "2026-09-15", "2026-09-14", "Returned"),
-                java.util.Arrays.asList("M-003", "Effective Java", "2026-08-20", "2026-09-03", "-", "Overdue")));
+            Arrays.asList("M-001", "Clean Code", "2026-09-15", "2026-09-29", "-", "Borrowed"),
+            Arrays.asList("M-002", "Java Basics", "2026-09-01", "2026-09-15", "2026-09-14", "Returned"),
+            Arrays.asList("M-003", "Effective Java", "2026-08-20", "2026-09-03", "-", "Overdue")));
         VBox.setVgrow(table, Priority.ALWAYS); box.getChildren().add(table); setContent(box);
     }
 
@@ -194,5 +211,10 @@ public class DashboardController {
         } catch (Exception exception) { showMessage("Logout", "You have been logged out."); }
     }
 
-    private void showMessage(String title, String message) { new Alert(Alert.AlertType.INFORMATION, message).showAndWait(); }
+    private void showMessage(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION, message);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.showAndWait();
+    }
 }
