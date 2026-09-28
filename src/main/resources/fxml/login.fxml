@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.StackPane?>
+
+<StackPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.library.LoginController" styleClass="login-background">
+    <VBox maxWidth="430" spacing="16" styleClass="login-card">
+        <padding><Insets top="42" right="48" bottom="42" left="48" /></padding>
+        <Label text="LIBRARY DESK" styleClass="brand-label" />
+        <Label text="Library Management System" styleClass="login-title" />
+        <Label text="Sign in to manage your library" styleClass="muted-label" />
+        <VBox spacing="7">
+            <Label text="Username" styleClass="field-label" />
+            <TextField fx:id="usernameField" promptText="Enter username" />
+        </VBox>
+        <VBox spacing="7">
+            <Label text="Password" styleClass="field-label" />
+            <PasswordField fx:id="passwordField" promptText="Enter password" />
+        </VBox>
+        <Label fx:id="messageLabel" styleClass="error-label" wrapText="true" />
+        <Button text="Login" onAction="#login" maxWidth="1.7976931348623157E308" styleClass="primary-button" />
+        <Button text="Clear / Reset" onAction="#clearForm" maxWidth="1.7976931348623157E308" styleClass="secondary-button" />
+        <Label text="Demo: enter any non-empty username and password" styleClass="hint-label" wrapText="true" />
+    </VBox>
+</StackPane>
