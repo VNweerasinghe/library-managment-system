@@ -67,8 +67,6 @@ public class DashboardController {
         return button;
     }
 
-    private void showMessage(String title, String message) { new Alert(Alert.AlertType.INFORMATION, message).showAndWait(); }
-
     @FXML
     private void showDashboard() {
         VBox box = page("Good morning, Librarian", "Here is today's library overview.");
@@ -176,9 +174,25 @@ public class DashboardController {
 
     @FXML
     private void showHistory() {
+        VBox box = page("Borrowing History", "Review borrowed, returned, and overdue books.");
+        TableView<java.util.List<String>> table = new TableView<>();
+        String[] headings = {"Member ID", "Book Title", "Issue Date", "Due Date", "Return Date", "Status"};
+        for (int i = 0; i < headings.length; i++) { final int index = i; TableColumn<java.util.List<String>, String> column = new TableColumn<>(headings[i]); column.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().get(index))); column.setPrefWidth(145); table.getColumns().add(column); }
+        table.setItems(FXCollections.observableArrayList(
+                java.util.Arrays.asList("M-001", "Clean Code", "2026-09-15", "2026-09-29", "-", "Borrowed"),
+                java.util.Arrays.asList("M-002", "Java Basics", "2026-09-01", "2026-09-15", "2026-09-14", "Returned"),
+                java.util.Arrays.asList("M-003", "Effective Java", "2026-08-20", "2026-09-03", "-", "Overdue")));
+        VBox.setVgrow(table, Priority.ALWAYS); box.getChildren().add(table); setContent(box);
     }
 
     @FXML
     private void logout() {
+        Stage stage = (Stage) contentArea.getScene().getWindow();
+        try {
+            Scene scene = new Scene(new javafx.fxml.FXMLLoader(getClass().getResource("/fxml/login.fxml")).load(), 1100, 700);
+            scene.getStylesheets().add(getClass().getResource("/css/styles.css").toExternalForm()); stage.setScene(scene); stage.setTitle("Library Management System");
+        } catch (Exception exception) { showMessage("Logout", "You have been logged out."); }
     }
+
+    private void showMessage(String title, String message) { new Alert(Alert.AlertType.INFORMATION, message).showAndWait(); }
 }
