@@ -149,10 +149,29 @@ public class DashboardController {
 
     @FXML
     private void showIssueBook() {
+        VBox box = page("Issue Book", "Create a borrowing record for a member.");
+        GridPane form = new GridPane(); form.setHgap(18); form.setVgap(14); form.getStyleClass().add("form-panel");
+        ComboBox<String> member = new ComboBox<>(FXCollections.observableArrayList("M-001 - Amal Perera", "M-002 - Nimal Silva")); member.setPromptText("Select member"); member.setPrefHeight(38);
+        ComboBox<String> book = new ComboBox<>(FXCollections.observableArrayList("B-101 - Clean Code", "B-102 - Java Basics")); book.setPromptText("Select book"); book.setPrefHeight(38);
+        DatePicker issue = new DatePicker(LocalDate.now()); DatePicker due = new DatePicker(LocalDate.now().plusDays(14));
+        addFormRow(form, 0, "Select Member", member); addFormRow(form, 1, "Select Book", book); addFormRow(form, 2, "Issue Date", issue); addFormRow(form, 3, "Due Date", due);
+        Button save = actionButton("Issue Book"); save.setOnAction(event -> showMessage("Book issued", "The borrowing record has been created."));
+        box.getChildren().addAll(form, save); setContent(box);
     }
 
     @FXML
     private void showReturnBook() {
+        VBox box = page("Return Book", "Select a borrowed book and record its return.");
+        GridPane form = new GridPane(); form.setHgap(18); form.setVgap(14); form.getStyleClass().add("form-panel");
+        ComboBox<String> loan = new ComboBox<>(FXCollections.observableArrayList("B-101 - Clean Code / M-001", "B-102 - Java Basics / M-002")); loan.setPromptText("Select borrowed book"); loan.setPrefHeight(38);
+        TextField member = textField("Member information"); member.setText("M-001 - Amal Perera"); member.setEditable(false);
+        TextField borrowed = textField("Borrowed date"); borrowed.setText("2026-09-15"); borrowed.setEditable(false);
+        TextField due = textField("Due date"); due.setText("2026-09-29"); due.setEditable(false);
+        DatePicker returned = new DatePicker(LocalDate.now());
+        addFormRow(form, 0, "Borrowed Book", loan); addFormRow(form, 1, "Member", member); addFormRow(form, 2, "Borrowed Date", borrowed); addFormRow(form, 3, "Due Date", due); addFormRow(form, 4, "Return Date", returned);
+        Label status = new Label("Status: On time"); status.getStyleClass().add("success-label");
+        Button save = actionButton("Return Book"); save.setOnAction(event -> showMessage("Book returned", "The return has been recorded."));
+        box.getChildren().addAll(form, status, save); setContent(box);
     }
 
     @FXML
