@@ -130,6 +130,21 @@ public class DashboardController {
 
     @FXML
     private void showMembers() {
+        VBox box = page("Manage Members", "Search, edit, or delete registered members.");
+        TextField search = textField("Search members by name or ID");
+        TableView<java.util.List<String>> table = new TableView<>();
+        String[] headings = {"Member ID", "Full Name", "Email", "Phone"};
+        for (int i = 0; i < headings.length; i++) {
+            final int index = i; TableColumn<java.util.List<String>, String> column = new TableColumn<>(headings[i]);
+            column.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().get(index))); column.setPrefWidth(180); table.getColumns().add(column);
+        }
+        table.setItems(FXCollections.observableArrayList(
+                java.util.Arrays.asList("M-001", "Amal Perera", "amal@email.com", "077 123 4567"),
+                java.util.Arrays.asList("M-002", "Nimal Silva", "nimal@email.com", "071 555 2211"),
+                java.util.Arrays.asList("M-003", "Sara Fernando", "sara@email.com", "076 900 1122")));
+        VBox.setVgrow(table, Priority.ALWAYS);
+        HBox buttons = new HBox(10, actionButton("Edit Member"), actionButton("Delete Member"));
+        box.getChildren().addAll(search, table, buttons); setContent(box);
     }
 
     @FXML
