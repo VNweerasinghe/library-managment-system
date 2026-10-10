@@ -117,6 +117,15 @@ public class DashboardController {
 
     @FXML
     private void showAddMember() {
+        VBox box = page("Add Member", "Register a new library member.");
+        GridPane form = new GridPane(); form.setHgap(18); form.setVgap(14); form.getStyleClass().add("form-panel");
+        TextField id = textField("Member ID"); TextField name = textField("Full name"); TextField email = textField("Email address");
+        TextField phone = textField("Phone number"); TextField address = textField("Address");
+        addFormRow(form, 0, "Member ID", id); addFormRow(form, 1, "Full Name", name); addFormRow(form, 2, "Email", email);
+        addFormRow(form, 3, "Phone Number", phone); addFormRow(form, 4, "Address", address);
+        Button save = actionButton("Register Member");
+        save.setOnAction(event -> showMessage("Member registered", "The member has been registered successfully."));
+        box.getChildren().addAll(form, save); setContent(box);
     }
 
     @FXML
