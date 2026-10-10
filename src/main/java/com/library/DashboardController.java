@@ -71,7 +71,30 @@ public class DashboardController {
 
     @FXML
     private void showDashboard() {
-        setContent(page("Dashboard", "Welcome to Library Desk."));
+        VBox box = page("Good morning, Librarian", "Here is today's library overview.");
+        GridPane cards = new GridPane();
+        cards.setHgap(16);
+        cards.setVgap(16);
+        String[][] data = {{"Total Books", "248", "Available collection"}, {"Total Members", "96", "Registered readers"}, {"Borrowed Books", "32", "Currently on loan"}, {"Overdue Books", "05", "Need attention"}};
+        for (int i = 0; i < data.length; i++) {
+            VBox card = new VBox(8, new Label(data[i][0]), new Label(data[i][1]), new Label(data[i][2]));
+            card.getStyleClass().add("stat-card");
+            card.getChildren().get(0).getStyleClass().add("stat-label");
+            card.getChildren().get(1).getStyleClass().add("stat-value");
+            card.getChildren().get(2).getStyleClass().add("stat-note");
+            cards.add(card, i % 2, i / 2);
+            GridPane.setHgrow(card, Priority.ALWAYS);
+        }
+        Label tip = new Label("Quick actions");
+        tip.getStyleClass().add("section-title");
+        HBox actions = new HBox(12);
+        Button addBook = actionButton("Add a Book");
+        addBook.setOnAction(event -> showAddBook());
+        Button addMember = actionButton("Register Member");
+        addMember.setOnAction(event -> showAddMember());
+        actions.getChildren().addAll(addBook, addMember);
+        box.getChildren().addAll(cards, tip, actions);
+        setContent(box);
     }
 
     @FXML
