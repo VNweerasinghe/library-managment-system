@@ -99,6 +99,20 @@ public class DashboardController {
 
     @FXML
     private void showAddBook() {
+        VBox box = page("Add Book", "Enter the details of a new book in the library.");
+        GridPane form = new GridPane();
+        form.setHgap(18); form.setVgap(14); form.getStyleClass().add("form-panel");
+        TextField id = textField("Book ID or ISBN"); TextField title = textField("Book title");
+        TextField author = textField("Author name"); TextField category = textField("Category");
+        TextField year = textField("Published year"); TextField quantity = textField("Quantity");
+        addFormRow(form, 0, "Book ID / ISBN", id); addFormRow(form, 1, "Book Title", title);
+        addFormRow(form, 2, "Author", author); addFormRow(form, 3, "Category", category);
+        addFormRow(form, 4, "Published Year", year); addFormRow(form, 5, "Quantity", quantity);
+        Button save = actionButton("Add Book"); Button clear = new Button("Clear"); clear.getStyleClass().add("secondary-button");
+        save.setOnAction(event -> showMessage("Book added", "The book has been added successfully."));
+        clear.setOnAction(event -> { id.clear(); title.clear(); author.clear(); category.clear(); year.clear(); quantity.clear(); });
+        HBox buttons = new HBox(10, save, clear);
+        box.getChildren().addAll(form, buttons); setContent(box);
     }
 
     @FXML
