@@ -4,7 +4,7 @@ Beginner-level JavaFX UI coursework project based on the provided assignment.
 
 ## Run the JavaFX application
 
-Requirements: Java 11 or newer and Maven.
+Requirements: Java 25 or newer and Maven.
 
 ```bash
 mvn clean javafx:run
