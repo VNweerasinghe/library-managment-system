@@ -35,8 +35,8 @@ class LibraryServiceTest {
                 "0771234567", "Main Street"), false);
 
         assertEquals(1, library.books().size());
-        assertEquals(3, library.books().getFirst().availableQuantity());
-        assertEquals("Alex Reader", library.members().getFirst().fullName());
+        assertEquals(3, library.books().get(0).availableQuantity());
+        assertEquals("Alex Reader", library.members().get(0).fullName());
     }
 
     @Test
@@ -51,9 +51,9 @@ class LibraryServiceTest {
         library.saveMember(new Member("M-001", "Alex R.", "alex.updated@example.com",
                 "0777654321", "Oak Street"), true);
 
-        assertEquals("Clean Code, Updated", library.books().getFirst().title());
-        assertEquals(4, library.books().getFirst().availableQuantity());
-        assertEquals("Alex R.", library.members().getFirst().fullName());
+        assertEquals("Clean Code, Updated", library.books().get(0).title());
+        assertEquals(4, library.books().get(0).availableQuantity());
+        assertEquals("Alex R.", library.members().get(0).fullName());
 
         library.deleteBook("B-001");
         library.deleteMember("M-001");
@@ -71,15 +71,15 @@ class LibraryServiceTest {
 
         library.issueBook("M-001", "B-001", issueDate, issueDate.plusDays(14));
 
-        assertEquals(0, library.books().getFirst().availableQuantity());
+        assertEquals(0, library.books().get(0).availableQuantity());
         assertEquals(1, library.activeLoans().size());
-        Loan loan = library.activeLoans().getFirst();
+        Loan loan = library.activeLoans().get(0);
 
         library.returnBook(loan.loanId(), issueDate);
 
-        assertEquals(1, library.books().getFirst().availableQuantity());
+        assertEquals(1, library.books().get(0).availableQuantity());
         assertEquals(0, library.activeLoans().size());
-        assertEquals("Returned", library.loans().getFirst().status());
+        assertEquals("Returned", library.loans().get(0).status());
     }
 
     @Test
@@ -94,7 +94,7 @@ class LibraryServiceTest {
         assertThrows(SQLException.class, () ->
                 library.issueBook("M-001", "B-001", today, today.plusDays(14)));
         assertEquals(1, library.loans().size());
-        assertEquals(0, library.books().getFirst().availableQuantity());
+        assertEquals(0, library.books().get(0).availableQuantity());
     }
 
     @Test
@@ -112,8 +112,8 @@ class LibraryServiceTest {
         assertThrows(SQLException.class, () -> library.saveBook(
                 new Book("B-001", "Clean Code", "Robert Martin", "Software",
                         2008, 1, 1), true));
-        assertEquals(1, library.books().getFirst().availableQuantity());
-        assertEquals(3, library.books().getFirst().quantity());
+        assertEquals(1, library.books().get(0).availableQuantity());
+        assertEquals(3, library.books().get(0).quantity());
     }
 
     @Test

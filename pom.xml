@@ -6,11 +6,11 @@
 
     <groupId>com.library</groupId>
     <artifactId>library-management-system</artifactId>
-    <version>1.0</version>
+    <version>1.0.0</version>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <maven.compiler.release>25</maven.compiler.release>
+        <maven.compiler.release>17</maven.compiler.release>
         <javafx.version>17.0.10</javafx.version>
     </properties>
 
