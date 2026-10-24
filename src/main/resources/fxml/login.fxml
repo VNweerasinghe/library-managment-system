@@ -24,6 +24,6 @@
         <Label fx:id="messageLabel" styleClass="error-label" wrapText="true" />
         <Button text="Login" onAction="#login" maxWidth="1.7976931348623157E308" styleClass="primary-button" />
         <Button text="Clear / Reset" onAction="#clearForm" maxWidth="1.7976931348623157E308" styleClass="secondary-button" />
-        <Label text="Demo: enter any non-empty username and password" styleClass="hint-label" wrapText="true" />
+        <Label text="Demo sign-in: enter any non-empty username and password. This prototype does not authenticate users." styleClass="hint-label" wrapText="true" />
     </VBox>
 </StackPane>

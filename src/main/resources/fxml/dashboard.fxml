@@ -13,6 +13,7 @@
             <VBox spacing="4" VBox.vgrow="ALWAYS" styleClass="navigation-box">
                 <Button text="Dashboard" onAction="#showDashboard" styleClass="nav-button" />
                 <Button text="Add Book" onAction="#showAddBook" styleClass="nav-button" />
+                <Button text="Manage Books" onAction="#showManageBooks" styleClass="nav-button" />
                 <Button text="Add Member" onAction="#showAddMember" styleClass="nav-button" />
                 <Button text="Manage Members" onAction="#showMembers" styleClass="nav-button" />
                 <Button text="Issue Book" onAction="#showIssueBook" styleClass="nav-button" />

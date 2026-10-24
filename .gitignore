@@ -5,3 +5,6 @@ target/
 .project
 .settings/
 *.pdf
+*.db
+*.db-shm
+*.db-wal
