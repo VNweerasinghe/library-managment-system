@@ -14,7 +14,7 @@ The sign-in screen is a coursework demonstration. It does not check real user ac
 
 ## What you need
 
-- Java Development Kit (JDK) 17 or newer ([download JDK 17](https://adoptium.net/temurin/releases/?version=17))
+- Java Development Kit (JDK) 25 or newer ([download JDK 25](https://adoptium.net/temurin/releases/?version=25))
 - Maven 3.8 or newer ([Maven installation guide](https://maven.apache.org/install.html))
 - Git, if you want to clone the project from a terminal
 - An internet connection the first time you build, so Maven can download the project libraries
