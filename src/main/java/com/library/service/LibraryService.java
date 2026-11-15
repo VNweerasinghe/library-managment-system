@@ -1,6 +1,9 @@
 package com.library.service;
 
 import com.library.data.LibraryRepository;
+import com.library.dto.BookDto;
+import com.library.dto.LoanDto;
+import com.library.dto.MemberDto;
 import com.library.model.Book;
 import com.library.model.Loan;
 import com.library.model.Member;
@@ -16,11 +19,11 @@ public class LibraryService {
         this.repository = repository;
     }
 
-    public List<Book> books() throws SQLException {
-        return repository.findBooks();
+    public List<BookDto> books() throws SQLException {
+        return repository.findBooks().stream().map(LibraryService::toBookDto).toList();
     }
 
-    public void saveBook(Book book, boolean editing) throws SQLException {
+    public void saveBook(BookDto book, boolean editing) throws SQLException {
         requireText(book.bookId(), "Book ID");
         requireText(book.title(), "Title");
         requireText(book.author(), "Author");
@@ -32,9 +35,9 @@ public class LibraryService {
             throw new IllegalArgumentException("Quantity must be at least one.");
         }
         if (editing) {
-            repository.updateBook(book);
+            repository.updateBook(toBook(book));
         } else {
-            repository.createBook(book);
+            repository.createBook(toBook(book));
         }
     }
 
@@ -42,11 +45,11 @@ public class LibraryService {
         repository.deleteBook(bookId);
     }
 
-    public List<Member> members() throws SQLException {
-        return repository.findMembers();
+    public List<MemberDto> members() throws SQLException {
+        return repository.findMembers().stream().map(LibraryService::toMemberDto).toList();
     }
 
-    public void saveMember(Member member, boolean editing) throws SQLException {
+    public void saveMember(MemberDto member, boolean editing) throws SQLException {
         requireText(member.memberId(), "Member ID");
         requireText(member.fullName(), "Full name");
         requireText(member.email(), "Email");
@@ -56,9 +59,9 @@ public class LibraryService {
             throw new IllegalArgumentException("Enter a valid email address.");
         }
         if (editing) {
-            repository.updateMember(member);
+            repository.updateMember(toMember(member));
         } else {
-            repository.createMember(member);
+            repository.createMember(toMember(member));
         }
     }
 
@@ -66,12 +69,12 @@ public class LibraryService {
         repository.deleteMember(memberId);
     }
 
-    public List<Loan> loans() throws SQLException {
-        return repository.findLoans();
+    public List<LoanDto> loans() throws SQLException {
+        return repository.findLoans().stream().map(LibraryService::toLoanDto).toList();
     }
 
-    public List<Loan> activeLoans() throws SQLException {
-        return repository.findActiveLoans();
+    public List<LoanDto> activeLoans() throws SQLException {
+        return repository.findActiveLoans().stream().map(LibraryService::toLoanDto).toList();
     }
 
     public void issueBook(String memberId, String bookId, LocalDate issueDate, LocalDate dueDate)
@@ -118,5 +121,30 @@ public class LibraryService {
         if (value == null || value.isBlank()) {
             throw new IllegalArgumentException(label + " is required.");
         }
+    }
+
+    private static BookDto toBookDto(Book book) {
+        return new BookDto(book.bookId(), book.title(), book.author(), book.category(),
+                book.publishedYear(), book.quantity(), book.availableQuantity());
+    }
+
+    private static Book toBook(BookDto book) {
+        return new Book(book.bookId(), book.title(), book.author(), book.category(),
+                book.publishedYear(), book.quantity(), book.availableQuantity());
+    }
+
+    private static MemberDto toMemberDto(Member member) {
+        return new MemberDto(member.memberId(), member.fullName(), member.email(),
+                member.phone(), member.address());
+    }
+
+    private static Member toMember(MemberDto member) {
+        return new Member(member.memberId(), member.fullName(), member.email(),
+                member.phone(), member.address());
+    }
+
+    private static LoanDto toLoanDto(Loan loan) {
+        return new LoanDto(loan.loanId(), loan.memberId(), loan.memberName(), loan.bookId(),
+                loan.bookTitle(), loan.issueDate(), loan.dueDate(), loan.returnDate());
     }
 }

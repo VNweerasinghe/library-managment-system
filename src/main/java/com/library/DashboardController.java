@@ -1,9 +1,9 @@
 package com.library;
 
 import com.library.data.LibraryRepository;
-import com.library.model.Book;
-import com.library.model.Loan;
-import com.library.model.Member;
+import com.library.dto.BookDto;
+import com.library.dto.LoanDto;
+import com.library.dto.MemberDto;
 import com.library.service.LibraryService;
 import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.collections.FXCollections;
@@ -182,7 +182,7 @@ public class DashboardController {
         Button clear = secondaryButton("Clear");
         save.setOnAction(event -> {
             try {
-                Book book = new Book(id.getText().trim(), title.getText().trim(), author.getText().trim(),
+                BookDto book = new BookDto(id.getText().trim(), title.getText().trim(), author.getText().trim(),
                         category.getText().trim(), Integer.parseInt(year.getText().trim()),
                         Integer.parseInt(quantity.getText().trim()), 0);
                 library.saveBook(book, false);
@@ -211,15 +211,15 @@ public class DashboardController {
         if (!ready()) return;
         VBox box = page("Manage books", "Search the catalogue, edit book details, or remove unused records.");
         TextField search = textField("Search by ID, title, author, or category");
-        TableView<Book> table = table();
-        addColumn(table, "Book ID", Book::bookId);
-        addColumn(table, "Title", Book::title);
-        addColumn(table, "Author", Book::author);
-        addColumn(table, "Category", Book::category);
+        TableView<BookDto> table = table();
+        addColumn(table, "Book ID", BookDto::bookId);
+        addColumn(table, "Title", BookDto::title);
+        addColumn(table, "Author", BookDto::author);
+        addColumn(table, "Category", BookDto::category);
         addColumn(table, "Year", book -> Integer.toString(book.publishedYear()));
         addColumn(table, "Available / Total", book -> book.availableQuantity() + " / " + book.quantity());
-        ObservableList<Book> items = FXCollections.observableArrayList();
-        FilteredList<Book> filtered = new FilteredList<>(items);
+        ObservableList<BookDto> items = FXCollections.observableArrayList();
+        FilteredList<BookDto> filtered = new FilteredList<>(items);
         table.setItems(filtered);
         search.textProperty().addListener((observable, oldValue, value) -> {
             String query = value.trim().toLowerCase();
@@ -229,12 +229,12 @@ public class DashboardController {
         Button edit = secondaryButton("Edit selected");
         Button delete = secondaryButton("Delete selected");
         edit.setOnAction(event -> {
-            Book selected = table.getSelectionModel().getSelectedItem();
+            BookDto selected = table.getSelectionModel().getSelectedItem();
             if (selected == null) {
                 showInformation("Select a book", "Choose a book in the table before editing.");
                 return;
             }
-            Book edited = editBookDialog(selected);
+            BookDto edited = editBookDialog(selected);
             if (edited != null) {
                 try {
                     library.saveBook(edited, true);
@@ -245,7 +245,7 @@ public class DashboardController {
             }
         });
         delete.setOnAction(event -> {
-            Book selected = table.getSelectionModel().getSelectedItem();
+            BookDto selected = table.getSelectionModel().getSelectedItem();
             if (selected == null) {
                 showInformation("Select a book", "Choose a book in the table before deleting.");
                 return;
@@ -265,7 +265,7 @@ public class DashboardController {
         refreshBooks(items);
     }
 
-    private Book editBookDialog(Book book) {
+    private BookDto editBookDialog(BookDto book) {
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Edit book");
         dialog.setHeaderText("Update " + book.title());
@@ -290,7 +290,7 @@ public class DashboardController {
         dialog.getDialogPane().setContent(form);
         return dialog.showAndWait().filter(save::equals).map(button -> {
             try {
-                return new Book(book.bookId(), title.getText().trim(), author.getText().trim(),
+                return new BookDto(book.bookId(), title.getText().trim(), author.getText().trim(),
                         category.getText().trim(), Integer.parseInt(year.getText().trim()),
                         Integer.parseInt(quantity.getText().trim()), book.availableQuantity());
             } catch (NumberFormatException exception) {
@@ -300,7 +300,7 @@ public class DashboardController {
         }).orElse(null);
     }
 
-    private void refreshBooks(ObservableList<Book> books) {
+    private void refreshBooks(ObservableList<BookDto> books) {
         try {
             books.setAll(library.books());
         } catch (SQLException exception) {
@@ -327,7 +327,7 @@ public class DashboardController {
         Button clear = secondaryButton("Clear");
         save.setOnAction(event -> {
             try {
-                library.saveMember(new Member(id.getText().trim(), name.getText().trim(),
+                library.saveMember(new MemberDto(id.getText().trim(), name.getText().trim(),
                         email.getText().trim(), phone.getText().trim(), address.getText().trim()), false);
                 showInformation("Member registered", "The member has been saved.");
                 showAddMember();
@@ -351,14 +351,14 @@ public class DashboardController {
         if (!ready()) return;
         VBox box = page("Manage members", "Search member records, edit contact details, or remove unused records.");
         TextField search = textField("Search by member ID, name, email, or phone");
-        TableView<Member> table = table();
-        addColumn(table, "Member ID", Member::memberId);
-        addColumn(table, "Full name", Member::fullName);
-        addColumn(table, "Email", Member::email);
-        addColumn(table, "Phone", Member::phone);
-        addColumn(table, "Address", Member::address);
-        ObservableList<Member> items = FXCollections.observableArrayList();
-        FilteredList<Member> filtered = new FilteredList<>(items);
+        TableView<MemberDto> table = table();
+        addColumn(table, "Member ID", MemberDto::memberId);
+        addColumn(table, "Full name", MemberDto::fullName);
+        addColumn(table, "Email", MemberDto::email);
+        addColumn(table, "Phone", MemberDto::phone);
+        addColumn(table, "Address", MemberDto::address);
+        ObservableList<MemberDto> items = FXCollections.observableArrayList();
+        FilteredList<MemberDto> filtered = new FilteredList<>(items);
         table.setItems(filtered);
         search.textProperty().addListener((observable, oldValue, value) -> {
             String query = value.trim().toLowerCase();
@@ -368,12 +368,12 @@ public class DashboardController {
         Button edit = secondaryButton("Edit selected");
         Button delete = secondaryButton("Delete selected");
         edit.setOnAction(event -> {
-            Member selected = table.getSelectionModel().getSelectedItem();
+            MemberDto selected = table.getSelectionModel().getSelectedItem();
             if (selected == null) {
                 showInformation("Select a member", "Choose a member in the table before editing.");
                 return;
             }
-            Member edited = editMemberDialog(selected);
+            MemberDto edited = editMemberDialog(selected);
             if (edited != null) {
                 try {
                     library.saveMember(edited, true);
@@ -384,7 +384,7 @@ public class DashboardController {
             }
         });
         delete.setOnAction(event -> {
-            Member selected = table.getSelectionModel().getSelectedItem();
+            MemberDto selected = table.getSelectionModel().getSelectedItem();
             if (selected == null) {
                 showInformation("Select a member", "Choose a member in the table before deleting.");
                 return;
@@ -404,7 +404,7 @@ public class DashboardController {
         refreshMembers(items);
     }
 
-    private Member editMemberDialog(Member member) {
+    private MemberDto editMemberDialog(MemberDto member) {
         Dialog<ButtonType> dialog = new Dialog<>();
         dialog.setTitle("Edit member");
         dialog.setHeaderText("Update " + member.fullName());
@@ -424,12 +424,12 @@ public class DashboardController {
         addFormRow(form, 2, "Phone", phone);
         addFormRow(form, 3, "Address", address);
         dialog.getDialogPane().setContent(form);
-        return dialog.showAndWait().filter(save::equals).map(button -> new Member(member.memberId(),
+        return dialog.showAndWait().filter(save::equals).map(button -> new MemberDto(member.memberId(),
                 name.getText().trim(), email.getText().trim(), phone.getText().trim(),
                 address.getText().trim())).orElse(null);
     }
 
-    private void refreshMembers(ObservableList<Member> members) {
+    private void refreshMembers(ObservableList<MemberDto> members) {
         try {
             members.setAll(library.members());
         } catch (SQLException exception) {
@@ -442,10 +442,10 @@ public class DashboardController {
         if (!ready()) return;
         VBox box = page("Issue a book", "Select a registered member and an available book.");
         GridPane form = formGrid();
-        ComboBox<Member> member = new ComboBox<>();
+        ComboBox<MemberDto> member = new ComboBox<>();
         member.setPromptText("Select a member");
         member.setPrefHeight(38);
-        ComboBox<Book> book = new ComboBox<>();
+        ComboBox<BookDto> book = new ComboBox<>();
         book.setPromptText("Select an available book");
         book.setPrefHeight(38);
         DatePicker issue = new DatePicker(LocalDate.now());
@@ -484,7 +484,7 @@ public class DashboardController {
         if (!ready()) return;
         VBox box = page("Return a book", "Select an active borrowing record and confirm the return date.");
         GridPane form = formGrid();
-        ComboBox<Loan> loan = new ComboBox<>();
+        ComboBox<LoanDto> loan = new ComboBox<>();
         loan.setPromptText("Select a book on loan");
         loan.setPrefHeight(38);
         DatePicker returned = new DatePicker(LocalDate.now());
@@ -503,12 +503,12 @@ public class DashboardController {
                 showError("The return could not be recorded.", exception);
             }
         });
-        TableView<Loan> active = loanTable();
+        TableView<LoanDto> active = loanTable();
         VBox.setVgrow(active, Priority.ALWAYS);
         box.getChildren().addAll(form, save, new Label("Current loans"), active);
         setContent(box);
         try {
-            List<Loan> loans = library.activeLoans();
+            List<LoanDto> loans = library.activeLoans();
             loan.setItems(FXCollections.observableArrayList(loans));
             active.setItems(FXCollections.observableArrayList(loans));
         } catch (SQLException exception) {
@@ -521,9 +521,9 @@ public class DashboardController {
         if (!ready()) return;
         VBox box = page("Borrowing history", "Search all borrowing records, including overdue and returned books.");
         TextField search = textField("Search by member, book, or status");
-        TableView<Loan> table = loanTable();
-        ObservableList<Loan> items = FXCollections.observableArrayList();
-        FilteredList<Loan> filtered = new FilteredList<>(items);
+        TableView<LoanDto> table = loanTable();
+        ObservableList<LoanDto> items = FXCollections.observableArrayList();
+        FilteredList<LoanDto> filtered = new FilteredList<>(items);
         table.setItems(filtered);
         search.textProperty().addListener((observable, oldValue, value) -> {
             String query = value.trim().toLowerCase();
@@ -541,16 +541,16 @@ public class DashboardController {
         }
     }
 
-    private TableView<Loan> loanTable() {
-        TableView<Loan> table = table();
-        addColumn(table, "Member ID", Loan::memberId);
-        addColumn(table, "Member", Loan::memberName);
-        addColumn(table, "Book ID", Loan::bookId);
-        addColumn(table, "Book", Loan::bookTitle);
+    private TableView<LoanDto> loanTable() {
+        TableView<LoanDto> table = table();
+        addColumn(table, "Member ID", LoanDto::memberId);
+        addColumn(table, "Member", LoanDto::memberName);
+        addColumn(table, "Book ID", LoanDto::bookId);
+        addColumn(table, "Book", LoanDto::bookTitle);
         addColumn(table, "Issue date", loan -> loan.issueDate().toString());
         addColumn(table, "Due date", loan -> loan.dueDate().toString());
         addColumn(table, "Return date", loan -> loan.returnDate() == null ? "—" : loan.returnDate().toString());
-        addColumn(table, "Status", Loan::status);
+        addColumn(table, "Status", LoanDto::status);
         return table;
     }
 
